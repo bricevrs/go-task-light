@@ -1,10 +1,23 @@
 package task
 
 import (
-	"context"
 	"encoding/json"
+)
 
-	"github.com/google/uuid"
+/*
+
+The goal of this file is to define what every task should have in common.
+The properties and the behavior via the TaskQuerier interface.
+For example, a task should have a status that will indicate if the task is done or not.
+A task should also have a payload that will contain the information needed to execute the task.
+A task should be able to be added to the database, updated, and retrieved.
+
+*/
+
+type TaskRelaunchPolicy string
+
+const (
+	TaskRelaunchPolicyNone TaskRelaunchPolicy = "NONE"
 )
 
 type TaskStatus string
@@ -22,31 +35,19 @@ type TaskLog struct {
 	Error     error
 }
 
-type TaskQuerier interface {
-	AddTask(ctx context.Context, arg ...interface{}) error
-	UpdateTaskStatus(ctx context.Context, arg ...interface{}) error
-	GetTask(ctx context.Context, arg ...interface{}) (*Task, error)
-}
-
-type TaskProcessor interface {
-	ExecTask(ctx context.Context, arg ...interface{}) error
-}
-
-type TaskManager struct {
-	db   TaskQuerier
-	proc TaskProcessor
-}
-
 type Task struct {
-	ID        uuid.UUID
 	Payload   json.RawMessage
 	Status    TaskStatus
 	StatusLog []TaskLog
+	Relaunch  TaskRelaunchPolicy
 }
 
-func New(db TaskQuerier, proc TaskProcessor) *TaskManager {
-	return &TaskManager{
-		db:   db,
-		proc: proc,
-	}
+type TaskQuerier interface {
+	AddTask(arg ...interface{}) error
+	UpdateTaskStatus(arg ...interface{}) error
+	GetTask(arg ...interface{}) (*Task, error)
+	MarshalTaskPayload(arg ...interface{}) (json.RawMessage, error)
+	UnmarshalTaskPayload(arg ...interface{}) (interface{}, error)
+	ExecuteTask(arg ...interface{}) error
+	RelaunchTask(arg ...interface{}) error
 }
