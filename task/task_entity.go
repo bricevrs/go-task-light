@@ -1,9 +1,5 @@
 package task
 
-import (
-	"encoding/json"
-)
-
 /*
 
 The goal of this file is to define what every task should have in common.
@@ -36,18 +32,8 @@ type TaskLog struct {
 }
 
 type Task struct {
-	Payload   json.RawMessage
-	Status    TaskStatus
-	StatusLog []TaskLog
-	Relaunch  TaskRelaunchPolicy
-}
-
-type TaskQuerier interface {
-	AddTask(arg ...interface{}) error
-	UpdateTaskStatus(arg ...interface{}) error
-	GetTask(arg ...interface{}) (*Task, error)
-	MarshalTaskPayload(arg ...interface{}) (json.RawMessage, error)
-	UnmarshalTaskPayload(arg ...interface{}) (interface{}, error)
-	ExecuteTask(arg ...interface{}) error
-	RelaunchTask(arg ...interface{}) error
+	Payload        TaskPayloadMarshaler
+	Status         TaskStatus
+	StatusLog      []TaskLog
+	RelaunchPolicy TaskRelaunchPolicy
 }
