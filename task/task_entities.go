@@ -30,8 +30,8 @@ type TaskLog struct {
 }
 
 type Task struct {
-	Payload        TaskPayloadMarshaler
-	Status         TaskStatus
-	StatusLog      []TaskLog
-	RelaunchPolicy TaskRelaunchPolicy
+	Payload   TaskPayloadMarshaler
+	Status    TaskStatus
+	StatusLog []TaskLog
+	//RelaunchPolicy TaskRelaunchPolicy
 }

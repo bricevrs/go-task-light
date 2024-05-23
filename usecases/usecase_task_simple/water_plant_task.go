@@ -21,9 +21,9 @@ type WaterPlantPayload struct {
 func NewWaterPlantTask(plantName string, waterQuantity int) (*WaterPlantTask, error) {
 	t := &WaterPlantTask{
 		Task: task.Task{
-			Status:         task.TaskStatusTodo,
-			RelaunchPolicy: task.TaskRelaunchPolicyNone,
-			Payload:        nil,
+			Status: task.TaskStatusTodo,
+			//RelaunchPolicy: task.TaskRelaunchPolicyNone,
+			Payload: nil,
 		},
 	}
 
@@ -51,11 +51,6 @@ func (t WaterPlantTask) Execute() error {
 	return nil
 }
 
-func (t WaterPlantTask) Relaunch() error {
-	// to be implemented
-	return nil
-}
-
 func (p WaterPlantPayload) ToJSON() ([]byte, error) {
 	return json.Marshal(p)
 }
@@ -78,9 +73,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Task created successfully\n")
+	fmt.Println("Task created successfully ✅\n")
 	fmt.Println("Task Status:", task.Status)
-	fmt.Println("Task Relaunch Policy:", task.RelaunchPolicy)
+	//fmt.Println("Task Relaunch Policy:", task.RelaunchPolicy)
 	fmt.Println("Task Payload:", task.Payload)
 
 	fmt.Println("\n...Marshalling the payload...")
@@ -88,7 +83,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Payload marshalled successfully\n")
+	fmt.Println("Payload marshalled successfully ✅\n")
 	fmt.Println("Payload marshalled to string:", string(payload))
 
 	fmt.Println("...Unmarshalling the payload...")
@@ -97,5 +92,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("Payload unmarshalled successfully ✅\n")
 	fmt.Println("Payload unmarshalled :", payloadUnmarshalled)
 }
