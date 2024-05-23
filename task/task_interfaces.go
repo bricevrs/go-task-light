@@ -7,12 +7,15 @@ For instance, a task should be able to be added to the database, updated, and re
 
 */
 
-import "encoding/json"
+import (
+	"context"
+	"encoding/json"
+)
 
 type TaskQuerier interface {
-	Add() error                           // Add to the database
-	UpdateStatus(status TaskStatus) error // Update the status of the task in the database
-	Execute() error                       // Execute the task
+	Add(ctx context.Context, arg ...interface{}) error         // Add to the database
+	UpdateStatus(status TaskStatus, arg ...interface{}) error  // Update the status of the task in the database
+	Execute(context context.Context, arg ...interface{}) error // Execute the task
 	//Relaunch() error
 }
 

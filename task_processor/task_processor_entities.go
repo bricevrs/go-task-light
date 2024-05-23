@@ -7,3 +7,7 @@ A task shouldn't be able to be executed by itself. So we need a task processor t
 the execution of the task and the relaunching of the task if it fails.
 
 */
+
+type TaskProcessor struct {
+	MaxGoroutines int
+}
