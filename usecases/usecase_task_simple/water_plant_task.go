@@ -10,6 +10,7 @@ import (
 
 type WaterPlantTask struct {
 	task.Task
+	// can add a db sql connection here
 }
 
 type WaterPlantPayload struct {
@@ -40,13 +41,9 @@ func (t WaterPlantTask) Add() error {
 	// to be implemented
 	return nil
 }
-func (t WaterPlantTask) UpdateStatus() error {
+func (t WaterPlantTask) UpdateStatus(status task.TaskStatus) error {
 	// to be implemented
 	return nil
-}
-func (t WaterPlantTask) Get() (*WaterPlantTask, error) {
-	// to be implemented
-	return nil, nil
 }
 
 func (t WaterPlantTask) Execute() error {

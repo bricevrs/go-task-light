@@ -10,9 +10,8 @@ For instance, a task should be able to be added to the database, updated, and re
 import "encoding/json"
 
 type TaskQuerier interface {
-	Add(arg ...interface{}) error
-	UpdateStatus(arg ...interface{}) error
-	Get(arg ...interface{}) (*Task, error)
+	Add() error
+	UpdateStatus(status TaskStatus) error
 	Execute() error
 	Relaunch() error
 }
