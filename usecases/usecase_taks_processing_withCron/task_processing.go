@@ -40,7 +40,10 @@ func (proc TaskProcessorPrototype) Execute(ctx context.Context, t task.TaskQueri
 	// For instance, we can add a retry mechanism
 	// Or we can add a timeout
 
-	t.Execute(ctx)
+	err := t.Execute(ctx)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

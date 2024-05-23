@@ -30,5 +30,19 @@ func main() {
 	var tasks []task.TaskQuerier = retrieveTasks()
 
 	// 3 - Execute the tasks with the task processor
-	taskProcessor.ExecuteBatch(ctx, tasks)
+	err := taskProcessor.ExecuteBatch(ctx, tasks)
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Println("All Tasks executed")
+	}
+
+	// 4 - Execute a specific task
+	err = taskProcessor.Execute(ctx, tasks[0])
+	log.Println(err)
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Println("Task 0 executed")
+	}
 }

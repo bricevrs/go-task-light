@@ -83,6 +83,12 @@ func (t WaterPlantTask) UpdateStatus(status task.TaskStatus, arg ...interface{})
 }
 
 func (t WaterPlantTask) Execute(ctx context.Context, arg ...interface{}) error {
+	if len(arg) == 0 {
+		return fmt.Errorf("no dao provided")
+	}
+	if _, ok := arg[0].(Dao); !ok {
+		return fmt.Errorf("dao is not of type Dao")
+	}
 	dao := arg[0].(Dao)
 	payload := t.Payload
 	if payload == nil {
