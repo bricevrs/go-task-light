@@ -4,12 +4,12 @@ import (
 	"context"
 	"log"
 
-	"github.com/bricevrs/go-task-light/task"
+	model "github.com/bricevrs/go-task-light/task"
 	usecase "github.com/bricevrs/go-task-light/usecases/usecase_taks_processing_withCron"
 )
 
-func retrieveTasks() []task.TaskQuerier {
-	var tasks []task.TaskQuerier = make([]task.TaskQuerier, 0)
+func retrieveTasks() []model.TaskQuerier {
+	var tasks []model.TaskQuerier = make([]model.TaskQuerier, 0)
 	for i := 0; i < 10; i++ {
 		// task can be of a generic type
 		// we can convert it to a specific type
@@ -27,7 +27,7 @@ func main() {
 	taskProcessor := usecase.NewTaskProcessorPrototype(10)
 
 	// 1 - Retrieve the tasks with the status "todo"
-	var tasks []task.TaskQuerier = retrieveTasks()
+	var tasks []model.TaskQuerier = retrieveTasks()
 
 	// 3 - Execute the tasks with the task processor
 	err := taskProcessor.ExecuteBatch(ctx, tasks)

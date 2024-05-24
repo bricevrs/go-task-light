@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/bricevrs/go-task-light/task"
+	model "github.com/bricevrs/go-task-light/task"
 	processor "github.com/bricevrs/go-task-light/task_processor"
 )
 
@@ -20,7 +20,7 @@ func NewTaskProcessorPrototype(maxGoroutines int) *TaskProcessorPrototype {
 	}
 }
 
-func (proc TaskProcessorPrototype) ExecuteBatch(ctx context.Context, tasks []task.TaskQuerier) error {
+func (proc TaskProcessorPrototype) ExecuteBatch(ctx context.Context, tasks []model.TaskQuerier) error {
 	// Can add some logic here to handle the execution of the tasks
 	// For instance, we can add a retry mechanism
 	// Or we can add a timeout
@@ -35,7 +35,7 @@ func (proc TaskProcessorPrototype) ExecuteBatch(ctx context.Context, tasks []tas
 	return nil
 }
 
-func (proc TaskProcessorPrototype) Execute(ctx context.Context, t task.TaskQuerier) error {
+func (proc TaskProcessorPrototype) Execute(ctx context.Context, t model.TaskQuerier) error {
 	// Can add some logic here to handle the execution of the task
 	// For instance, we can add a retry mechanism
 	// Or we can add a timeout

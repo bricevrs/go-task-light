@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/bricevrs/go-task-light/task"
+	model "github.com/bricevrs/go-task-light/task"
 )
 
 type Dao interface {
@@ -23,7 +23,7 @@ func (dao DaoImpl) waterThePlant(plantName string, quantityOfWater int) error {
 
 type DB interface {
 	save() error
-	setStatus(status task.TaskStatus) error
+	setStatus(status model.TaskStatus) error
 }
 
 type DBImpl struct {
@@ -33,13 +33,13 @@ func (db DBImpl) save() error {
 	fmt.Println("Saving to the database...")
 	return nil
 }
-func (db DBImpl) setStatus(status task.TaskStatus) error {
+func (db DBImpl) setStatus(status model.TaskStatus) error {
 	fmt.Println("Setting the status in the database...")
 	return nil
 }
 
 type WaterPlantTask struct {
-	task.Task
+	model.Task
 }
 
 type WaterPlantPayload struct {
@@ -49,8 +49,8 @@ type WaterPlantPayload struct {
 
 func NewWaterPlantTask(plantName string, waterQuantity int) (*WaterPlantTask, error) {
 	t := &WaterPlantTask{
-		Task: task.Task{
-			Status:  task.TaskStatusTodo,
+		Task: model.Task{
+			Status:  model.TaskStatusTodo,
 			Payload: nil,
 		},
 	}
@@ -73,7 +73,7 @@ func (t WaterPlantTask) Add(ctx context.Context, arg ...interface{}) error {
 	}
 	return nil
 }
-func (t WaterPlantTask) UpdateStatus(status task.TaskStatus, arg ...interface{}) error {
+func (t WaterPlantTask) UpdateStatus(status model.TaskStatus, arg ...interface{}) error {
 	db := arg[0].(DB)
 	err := db.setStatus(status)
 	if err != nil {
@@ -105,7 +105,7 @@ func (t WaterPlantTask) Execute(ctx context.Context, arg ...interface{}) error {
 	}
 
 	// update the status
-	t.UpdateStatus(task.TaskStatusDone)
+	t.UpdateStatus(model.TaskStatusDone)
 	return nil
 }
 
