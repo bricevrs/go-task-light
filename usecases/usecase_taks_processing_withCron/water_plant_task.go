@@ -7,6 +7,7 @@ import (
 	"log"
 
 	model "github.com/bricevrs/go-task-light/task"
+	"github.com/google/uuid"
 )
 
 type Dao interface {
@@ -65,6 +66,10 @@ func NewWaterPlantTask(plantName string, waterQuantity int) (*WaterPlantTask, er
 	return t, nil
 }
 
+func (t WaterPlantTask) GetId() uuid.UUID {
+	return t.ID
+}
+
 func (t WaterPlantTask) Add(ctx context.Context, arg ...interface{}) error {
 	db := arg[0].(DB)
 	err := db.save()
@@ -73,7 +78,7 @@ func (t WaterPlantTask) Add(ctx context.Context, arg ...interface{}) error {
 	}
 	return nil
 }
-func (t WaterPlantTask) UpdateStatus(status model.TaskStatus, arg ...interface{}) error {
+func (t WaterPlantTask) UpdateStatus(ctx context.Context, status model.TaskStatus, error string, arg ...interface{}) error {
 	db := arg[0].(DB)
 	err := db.setStatus(status)
 	if err != nil {
@@ -105,7 +110,7 @@ func (t WaterPlantTask) Execute(ctx context.Context, arg ...interface{}) error {
 	}
 
 	// update the status
-	t.UpdateStatus(model.TaskStatusDone)
+	t.UpdateStatus(ctx, model.TaskStatusDone, "")
 	return nil
 }
 

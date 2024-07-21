@@ -1,4 +1,10 @@
-package model
+package tasks_models
+
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 /*
 
@@ -17,21 +23,22 @@ const (
 type TaskStatus string
 
 const (
-	TaskStatusTodo  TaskStatus = "TODO"
-	TaskStatusDo    TaskStatus = "DO"
-	TaskStatusDone  TaskStatus = "DONE"
-	TaskStatusError TaskStatus = "ERROR"
+	TaskStatusTodo       TaskStatus = "TODO"
+	TaskStatusInProgress TaskStatus = "IN_PROGRESS"
+	TaskStatusDone       TaskStatus = "DONE"
+	TaskStatusError      TaskStatus = "ERROR"
 )
 
 type TaskLog struct {
-	UpdatedAt string
-	Status    TaskStatus
-	Error     error
+	Datetime time.Time  `json:"datetime"`
+	Status   TaskStatus `json:"status"`
+	Error    string     `json:"error"`
 }
 
 type Task struct {
-	Payload   TaskPayloadMarshaler
-	Status    TaskStatus
-	StatusLog []TaskLog
+	ID        uuid.UUID            `json:"id"`
+	Payload   TaskPayloadMarshaler `json:"payload"`
+	Status    TaskStatus           `json:"status"`
+	StatusLog []TaskLog            `json:"status_log"`
 	//RelaunchPolicy TaskRelaunchPolicy
 }

@@ -2,9 +2,10 @@ package usecase
 
 import (
 	"context"
-	"fmt"
+	"log"
+	"sync"
 
-	model "github.com/bricevrs/go-task-light/task"
+	tasks_models "github.com/bricevrs/go-task-light/task"
 	processor "github.com/bricevrs/go-task-light/task_processor"
 )
 
@@ -19,31 +20,51 @@ func NewTaskProcessorPrototype(maxGoroutines int) *TaskProcessorPrototype {
 		},
 	}
 }
+func (proc TaskProcessorPrototype) ExecuteBatch(ctx context.Context, tasks []tasks_models.TaskQuerier) error {
+	if len(tasks) == 0 {
+		return nil
+	}
 
-func (proc TaskProcessorPrototype) ExecuteBatch(ctx context.Context, tasks []model.TaskQuerier) error {
-	// Can add some logic here to handle the execution of the tasks
-	// For instance, we can add a retry mechanism
-	// Or we can add a timeout
+	var err error
 
-	// We use goroutines to execute the tasks in parallel
-	// We use a worker pool to limit the number of tasks executed in parallel
+	rounds := len(tasks) / proc.MaxGoroutines
+	rest := len(tasks) % proc.MaxGoroutines
 
-	fmt.Println("Executing tasks...")
-	fmt.Println("Number of tasks to execute: ", len(tasks))
-	fmt.Println("Number of goroutines: ", proc.MaxGoroutines)
+	for i := 0; i < rounds; i++ {
+		var wg sync.WaitGroup
+		wg.Add(proc.MaxGoroutines)
+		tasksToExecute := tasks[i*proc.MaxGoroutines : (i+1)*proc.MaxGoroutines]
+		for _, task := range tasksToExecute {
+			go func(task tasks_models.TaskQuerier) {
+				defer wg.Done()
+				err = task.Execute(ctx, task)
+				if err != nil {
+					log.Printf("Error executing task %s: %s", task.GetId(), err.Error())
+				}
+			}(task)
+		}
+		wg.Wait()
+	}
+
+	if rest > 0 {
+		var wg sync.WaitGroup
+		wg.Add(rest)
+		tasksToExecute := tasks[rounds*proc.MaxGoroutines:]
+		for _, task := range tasksToExecute {
+			go func(task tasks_models.TaskQuerier) {
+				defer wg.Done()
+				err = task.Execute(ctx, task)
+				if err != nil {
+					log.Printf("Error executing task %s: %s", task.GetId(), err.Error())
+				}
+			}(task)
+		}
+		wg.Wait()
+	}
 
 	return nil
 }
 
-func (proc TaskProcessorPrototype) Execute(ctx context.Context, t model.TaskQuerier) error {
-	// Can add some logic here to handle the execution of the task
-	// For instance, we can add a retry mechanism
-	// Or we can add a timeout
-
-	err := t.Execute(ctx)
-	if err != nil {
-		return err
-	}
-
-	return nil
+func (proc TaskProcessorPrototype) Execute(ctx context.Context, t tasks_models.TaskQuerier) error {
+	return t.Execute(ctx, t)
 }

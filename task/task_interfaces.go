@@ -1,4 +1,4 @@
-package model
+package tasks_models
 
 /*
 
@@ -10,12 +10,15 @@ For instance, a task should be able to be added to the database, updated, and re
 import (
 	"context"
 	"encoding/json"
+
+	"github.com/google/uuid"
 )
 
-type TaskQuerier interface {
-	Add(ctx context.Context, arg ...interface{}) error         // Add to the database
-	UpdateStatus(status TaskStatus, arg ...interface{}) error  // Update the status of the task in the database
-	Execute(context context.Context, arg ...interface{}) error // Execute the task
+type TaskQuerier interface { // Get the ID of the task
+	GetId() uuid.UUID
+	Add(ctx context.Context, arg ...interface{}) error                                           // Add to the database
+	UpdateStatus(ctx context.Context, status TaskStatus, error string, arg ...interface{}) error // Update the status of the task in the database
+	Execute(ctx context.Context, arg ...interface{}) error                                       // Execute the task
 	//Relaunch() error
 }
 
